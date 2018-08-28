@@ -5,6 +5,7 @@ from naoqi import ALProxy
 ip_robot = "10.0.7.63"
 port_robot = 9559
 
+#简单的nao机器人发音测试
 def botsay():
     try:
         tts=ALProxy("ALTextToSpeech",ip_robot,port_robot)

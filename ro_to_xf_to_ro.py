@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 import str_tosound as tos
+import weather
 import paramiko
 import re
 import urllib2
@@ -24,7 +25,7 @@ def integration_from_nao():
     channal_list = [0, 0, 1, 0]
     aur.startMicrophonesRecording("/home/nao/test.wav", "wav", 16000, channal_list)
     print("开始")
-    time.sleep(10)
+    time.sleep(5)
     aur.stopMicrophonesRecording()
     print("完成")
     transport = paramiko.Transport((ip_robot, port_trans))
@@ -35,7 +36,7 @@ def integration_from_nao():
     print ("test3")
     sftp.get(r_path, c_path)
     print ("test4")
-    sendfile_to_service(c_path)
+    return sendfile_to_service(c_path)
 
 #发送语音文件至nao并播放
 def integration_to_nao():
@@ -91,26 +92,36 @@ def sendfile_to_service(file_path):
     return d1['data']
 
 #对听到用户发出指令予以应答
-def str_sclassification(str):
-    flag = re.search(u'我叫', str)
-    s=str
+def str_sclassification(strs):
+    flag = re.search(u'我叫', strs)
+    flag2 = re.search(u'天气', strs)
+    print(flag)
     print ("test5")
     if (
             flag is not None
     ):
         try:
-            s1 = s.split(u'我叫')
-            s = s1[1]
-            s1 = s.split(u'。')
-            s = s1[0]
+            s1 = strs.split(u'我叫')
+            strs = s1[1]
+            print(strs)
+            s1 = strs.split(u'。')
+            strs = s1[0]
+            print(strs)
+            print("testN")
         except Exception:
-            s = ''
+            strs = ''
             pass
-        print(s)
-        s=u"你好"+str(s)+u",我叫闹闹"
-        net_connect(s)
-        print (s)
-
+        print(strs)
+        strs = u"你好"+strs+u",我叫闹闹"
+        net_connect(strs)
+        print (strs)
+    elif(
+            flag2 is not None):
+        strs = weather.connect_weather()
+        net_connect(strs)
+    else:
+        strs = "我没有听见你在说什么，不想做个自我介绍么？"
+        net_connect(strs)
     print ("test7")
 
 #连接科大讯飞接口索取语音合成并播放
@@ -120,7 +131,7 @@ def net_connect(str):
             flag < 3):
         flag += 1
         try:
-            tos.txt_to_sound(s)
+            tos.txt_to_sound(str)
             integration_to_nao()
             break
         except Exception:

@@ -9,7 +9,7 @@ port_robot = 9559
 humanEventWatcher = None
 memory = None
 
-
+#人脸追踪拍照测试
 class HumanTrackedEventWatcher(ALModule):
     """ A module to react to HumanTracked and PeopleLeft events """
 

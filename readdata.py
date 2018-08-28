@@ -6,6 +6,7 @@ import json
 ip_robot = "10.0.7.63"
 port_robot = 9559
 
+#读取内存测试
 def sound_recognize():
     am=ALProxy("ALMemory", ip_robot, port_robot)
     ad=am.WordRecognized

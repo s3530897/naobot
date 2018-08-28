@@ -11,6 +11,7 @@ AUE = "raw"
 APPID = "5b7fbe72"
 API_KEY = "44a73a6b6f487ce4905431ad24b32ec6"
 
+#头文件标准
 def getHeader():
         curTime = str(int(time.time()))
         param = "{\"aue\":\""+AUE+"\",\"auf\":\"audio/L16;rate=16000\",\"voice_name\":\"xiaoyan\",\"engine_type\":\"intp65\"}"
@@ -28,15 +29,18 @@ def getHeader():
         }
         return header
 
+#获取文字
 def getBody(text):
         data = {'text':text}
         return data
 
+#读写文件
 def writeFile(file, content):
     with open(file, 'wb') as f:
         f.write(content)
     f.close()
 
+#文字合成语音转译
 def txt_to_sound(str):
     r = requests.post(URL,headers=getHeader(),data=getBody(str))
     contentType = r.headers['Content-Type']
@@ -52,4 +56,4 @@ def txt_to_sound(str):
 
 if (
         __name__ == "__main__"):
-    txt_to_sound(u"科大讯飞是中国语音技术")
+    txt_to_sound(u"我叫机器人一号")

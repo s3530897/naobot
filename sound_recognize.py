@@ -6,6 +6,7 @@ import json
 ip_robot = "10.0.7.63"
 port_robot = 9559
 
+#基于机器人本体的语音辨析测试
 def sound_recognize():
     asr = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
     asr.pause(True)

@@ -5,7 +5,7 @@ from naoqi import ALProxy
 ip_robot = "10.0.7.63"
 port_robot = 9559
 
-
+#录音播放功能测试
 def sound_record():
     aur = ALProxy("ALAudioRecorder", ip_robot, port_robot)
     channal_list = [1, 1, 1, 1]

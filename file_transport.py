@@ -6,7 +6,7 @@ port_trans = 22
 c_path = "E:/work/CNLP/resource/test.wav"
 r_path = "/home/nao/test.wav"
 
-
+#文件在本机与nao机器人间传递测试
 def transit():
     transport = paramiko.Transport((ip_robot, port_trans))
     print ("test1")
