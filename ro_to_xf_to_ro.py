@@ -10,6 +10,7 @@ import json
 import hashlib
 import base64
 from naoqi import ALProxy
+import takephoto as tph
 
 port_trans = 22
 ip_robot = "10.0.7.63"
@@ -95,6 +96,8 @@ def sendfile_to_service(file_path):
 def str_sclassification(strs):
     flag = re.search(u'我叫', strs)
     flag2 = re.search(u'天气', strs)
+    flag_takephoto1 = re.search(u'拍照', strs)
+    flag_takephoto2 = re.search(u'拍个照', strs)
     print(flag)
     print ("test5")
     if (
@@ -115,14 +118,40 @@ def str_sclassification(strs):
         strs = u"你好"+strs+u",我叫闹闹"
         net_connect(strs)
         print (strs)
+        return 5
     elif(
             flag2 is not None):
-        strs = weather.connect_weather()
+        weather_lo_flag=re.search(u'的天气',strs)
+        if(weather_lo_flag is not None):
+            if(re.search(u'查下', strs) is not None):
+                ss = strs.split(u'查下')
+                strs = ss[1]
+            if (re.search(u'查查', strs) is not None):
+                ss = strs.split(u'查查')
+                strs = ss[1]
+            if (re.search(u'查询', strs) is not None):
+                ss = strs.split(u'查询')
+                strs = ss[1]
+            ss=strs.split(u'的天气')
+            strs = weather.connect_weather(ss[0])
+        else:
+            strs = weather.connect_weather()
         net_connect(strs)
+        return 18
+    elif((flag_takephoto1 is not None) or (flag_takephoto2 is not None)):
+        strs = "好啊，给你拍个照，看着我正义的眼睛，3,2,1，咔嚓"
+        net_connect(strs)
+        print("拍照准备")
+        time.sleep(6)
+        print("拍照计时")
+        tph.takephoto()
+        return 3
     else:
         strs = "我没有听见你在说什么，不想做个自我介绍么？"
         net_connect(strs)
+        return 5
     print ("test7")
+    return 5
 
 #连接科大讯飞接口索取语音合成并播放
 def net_connect(str):

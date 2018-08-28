@@ -9,11 +9,11 @@ def interact():
         localtime = time.localtime(time.time())
         print "本地时间为 :", localtime
         result=ro.integration_from_nao()
-        ro.str_sclassification(result)
+        ti = ro.str_sclassification(result)
         print('中止')
         localtime = time.localtime(time.time())
         print "本地时间为 :", localtime
-        time.sleep(6)
+        time.sleep(ti)
         print('终止')
         localtime = time.localtime(time.time())
         print "本地时间为 :", localtime
