@@ -12,6 +12,7 @@ import base64
 from naoqi import ALProxy
 import takephoto as tph
 import lzz_recognize_food as lzzf
+import lzz_reference as lzzr
 
 port_trans = 22
 ip_robot = "10.0.7.63"
@@ -100,9 +101,15 @@ def str_sclassification(strs):
     flag_takephoto1 = re.search(u'拍照', strs)
     flag_takephoto2 = re.search(u'拍个照', strs)
     flag_lzz = re.search(u'记录',strs)
+    flag_lzz_vit = re.search(u'营养',strs)
     print(flag)
     print ("test5")
-    if (
+    if(
+            flag_lzz_vit is not None):
+        strs = lzzr.connect_lzz_reference(strs)
+        net_connect(strs)
+        return 40
+    elif(
         flag_lzz is not None):
         strs = lzzf.connect_lzz_food_recognize(strs)
         net_connect(strs)
