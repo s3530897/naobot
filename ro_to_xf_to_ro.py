@@ -11,6 +11,7 @@ import hashlib
 import base64
 from naoqi import ALProxy
 import takephoto as tph
+import lzz_recognize_food as lzzf
 
 port_trans = 22
 ip_robot = "10.0.7.63"
@@ -26,7 +27,7 @@ def integration_from_nao():
     channal_list = [0, 0, 1, 0]
     aur.startMicrophonesRecording("/home/nao/test.wav", "wav", 16000, channal_list)
     print("开始")
-    time.sleep(5)
+    time.sleep(10)
     aur.stopMicrophonesRecording()
     print("完成")
     transport = paramiko.Transport((ip_robot, port_trans))
@@ -53,7 +54,7 @@ def integration_to_nao():
     aup.post.playFile(rer_path)
 
 #发送指定语音文件至科大讯飞转译为文字返回字符串
-def sendfile_to_service(file_path):
+def sendfile_to_service(file_path = c_path):
     f = open(file_path, 'rb')
     file_content = f.read()
     base64_audio = base64.b64encode(file_content)
@@ -98,9 +99,15 @@ def str_sclassification(strs):
     flag2 = re.search(u'天气', strs)
     flag_takephoto1 = re.search(u'拍照', strs)
     flag_takephoto2 = re.search(u'拍个照', strs)
+    flag_lzz = re.search(u'记录',strs)
     print(flag)
     print ("test5")
     if (
+        flag_lzz is not None):
+        strs = lzzf.connect_lzz_food_recognize(strs)
+        net_connect(strs)
+        return 16
+    elif(
             flag is not None
     ):
         try:

@@ -5,6 +5,8 @@ import file_transport as ft
 
 ip_robot = "10.0.7.63"
 port_robot = 9559
+
+#拍照接口
 def takephoto():
     photo_apture = ALProxy("ALPhotoCapture", ip_robot, port_robot)
     cameraMap = {

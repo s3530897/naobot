@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 import paramiko
 
 ip_robot = "10.0.7.63"
