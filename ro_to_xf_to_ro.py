@@ -108,7 +108,7 @@ def str_sclassification(strs):
             flag_lzz_vit is not None):
         strs = lzzr.connect_lzz_reference(strs)
         net_connect(strs)
-        return 40
+        return 160
     elif(
         flag_lzz is not None):
         strs = lzzf.connect_lzz_food_recognize(strs)

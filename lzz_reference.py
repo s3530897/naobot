@@ -34,41 +34,54 @@ def lzz_reference(msg):
     result_basic=result['nutritions']["basic"]
     for index in range(0,len(result_basic)):
         s += result_basic[index]['name']+str(round(result_basic[index]['value'],2))
-        if(result_basic[index]['unit']==u'g'):
+        if(
+                result_basic[index]['unit']==u'g'):
             s += u'克，'
         else:
             s += u'卡，'
     s += u'摄入了维生素,'
     result_vitamin = result['nutritions']["vitamin"]
     for index in range(0,len(result_vitamin)):
-        s += result_vitamin[index]['name'] + u',' + str(round(result_vitamin[index]['value'],2))
-        if(result_vitamin[index]['unit'] == u'ug'):
-            s += u'微克，'
-        else:
-            s += u'毫克，'
+        if(
+                round(result_vitamin[index]['value'],2) != 0.0):
+            s += result_vitamin[index]['name'] + u',' + str(round(result_vitamin[index]['value'],2))
+            if(
+                    result_vitamin[index]['unit'] == u'ug'):
+                s += u'微克，'
+            else:
+                s += u'毫克，'
     s += u'摄入了矿物质营养元素,'
     result_trace_element = result['nutritions']["trace_element"]
     for index in range(0,len(result_trace_element)):
-        s += result_trace_element[index]['name'] + str(round(result_trace_element[index]['value'],2))
-        if(result_trace_element[index]['unit'] == u'ug'):
-            s += u'微克，'
-        else:
-            s += u'毫克，'
+        if(
+                round(result_trace_element[index]['value'],2) != 0.0):
+            s += result_trace_element[index]['name'] + str(round(result_trace_element[index]['value'],2))
+            if(
+                    result_trace_element[index]['unit'] == u'ug'):
+                s += u'微克，'
+            else:
+                s += u'毫克，'
     result_others = result['nutritions']["others"]
     s += u'摄入了,'
     result_others = result['nutritions']["others"]
     for index in range(0, len(result_others)):
-        s += result_others[index]['name'] + u',' + str(round(result_others[index]['value'], 2))
-        if (result_others[index]['unit'] == u'ug'):
-            s += u'微克，'
-        elif(result_others[index]['unit'] == u'mg'):
-            s += u'毫克，'
-        elif (result_others[index]['unit'] == u'g'):
-            s += u'克，'
-        elif (result_others[index]['unit'] == u'mmol'):
-            s += u'摩尔，'
-        else:
-            pass
+        if(
+                round(result_others[index]['value'], 2) != 0.0):
+            s += result_others[index]['name'] + u',' + str(round(result_others[index]['value'], 2))
+            if (
+                    result_others[index]['unit'] == u'ug'):
+                s += u'微克，'
+            elif(
+                    result_others[index]['unit'] == u'mg'):
+                s += u'毫克，'
+            elif (
+                    result_others[index]['unit'] == u'g'):
+                s += u'克，'
+            elif (
+                    result_others[index]['unit'] == u'mmol'):
+                s += u'摩尔，'
+            else:
+                s += u'，'
     print(s)
     return s
 
@@ -90,5 +103,5 @@ def connect_lzz_reference(msg):
 
 if (
          __name__ == "__main__"):
-    s=connect_lzz_reference(u"吃了一碗饭，两瓶可乐，吃了土豆牛肉")
+    s=connect_lzz_reference(u"营养素查询，吃了一碗饭，两瓶可乐")
     print(s)

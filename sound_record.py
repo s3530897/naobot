@@ -9,7 +9,7 @@ port_robot = 9559
 def sound_record():
     aur = ALProxy("ALAudioRecorder", ip_robot, port_robot)
     channal_list = [1, 1, 1, 1]
-    aur.startMicrophonesRecording("/home/nao/rectest.wav", "wav", 16000, channal_list)
+    #aur.startMicrophonesRecording("/home/nao/rectest.wav", "wav", 16000, channal_list)
     print("开始")
     time.sleep(10)
     aur.stopMicrophonesRecording()
