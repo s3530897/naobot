@@ -47,7 +47,7 @@ def txt_to_sound(str):
     if contentType == "audio/mpeg":
         sid = r.headers['sid']
         if AUE == "raw":
-            writeFile("E:/work/CNLP/resource/intest.wav", r.content)
+            writeFile("E:/work/CNLP/resource/what.wav", r.content)
         else :
             writeFile("audio/"+sid+".mp3", r.content)
         print "success, sid = " + sid
@@ -56,4 +56,4 @@ def txt_to_sound(str):
 
 if (
         __name__ == "__main__"):
-    txt_to_sound(u"我叫机器人一号")
+    txt_to_sound(u"干嘛？")

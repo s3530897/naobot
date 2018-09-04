@@ -2,25 +2,20 @@
 from naoqi import ALProxy, ALBroker, ALModule
 import time
 import sys
-import interactive_demo2 as intc2
-
-
-
-
+from multiprocessing import Process
+import interactive_demo2 as interat
 
 ip_robot = "10.0.7.63"
 port_robot = 9559
-
 # Global variable to store the humanEventWatcher module instance
 humanEventWatcher = None
 memory = None
 
+
 #人脸追踪拍照测试
 class HumanTrackedEventWatcher(ALModule):
     """ A module to react to HumanTracked and PeopleLeft events """
-
     def __init__(self):
-        print("开始")
         ALModule.__init__(self, "humanEventWatcher")
         global memory
         memory = ALProxy("ALMemory", ip_robot, port_robot)
@@ -30,16 +25,7 @@ class HumanTrackedEventWatcher(ALModule):
         memory.subscribeToEvent("ALBasicAwareness/PeopleLeft",
                                 "humanEventWatcher",
                                 "onPeopleLeft")
-        memory.subscribeToEvent("SpeechDetected",
-                                "true",
-                                "onSpeechDetected")
-        memory.subscribeToEvent("ALSpeechRecognition / IsRunning",
-                                "True",
-                                "onALSpeechDetected")
-        memory.subscribeToEvent("FrontTactilTouched",
-                                1.0,
-                                "onFrontTactilTouched")
-        memory.subscribeToEvent('WordRecognized', ip_robot, 'wordRecognized')
+        #memory.subscribeToEvent('WordRecognized', ip_robot, 'wordRecognized')
         self.speech_reco = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
         self.text_to_speech=ALProxy("ALTextToSpeech", ip_robot, port_robot)
         self.is_speech_reco_started = False
@@ -50,25 +36,10 @@ class HumanTrackedEventWatcher(ALModule):
         }
         self.camera_id=0
         self.recordFolder = "/home/nao/recordings/cameras/"
-        self.flag=True
-    def onSoundDetected(self,eventName,value,subscriberIdentifier):
-        print("这是最后的波纹")
-        print(eventName)
-        print(value)
-        print(subscriberIdentifier)
-
-    def onALSpeechDetected(self):
-        print("这是最后的波纹原版")
-
-    def onSpeechDetected(self):
-        print("这还是最后的波纹")
-
-    def onFrontTactilTouched(self):
-        print("咬你哦")
+        self.p = Process(target=interat)
 
     def onHumanTracked(self, key, value, msg):
         """ callback for event HumanTracked """
-        print("人物捕捉")
         print "got HumanTracked: detected person with ID:", str(value)
         if value >= 0:  # found a new person
             self.start_speech_reco()
@@ -77,6 +48,13 @@ class HumanTrackedEventWatcher(ALModule):
             print "The tracked person with ID", value, "is at the position:", \
                 "x=", x, "/ y=",  y, "/ z=", z
             print "Aha, I saw a human!"
+            self.p.is_alive()
+            if (
+                    self.p.is_alive()):
+                pass
+            else:
+                self.p = Process(target=interat)
+                self.p.start()
         else:
             pass
 
@@ -85,12 +63,11 @@ class HumanTrackedEventWatcher(ALModule):
     def onPeopleLeft(self, key, value, msg):
         """ callback for event PeopleLeft """
         print "got PeopleLeft: lost person", str(value)
+        self.p.terminate()
         self.stop_speech_reco()
 
     def start_speech_reco(self):
         """ start asr when someone's detected in event handler class """
-        print("开始录音")
-        intc2.interact()
         if not self.is_speech_reco_started:
             try:
                 data = memory.getData("WordRecognized")
@@ -103,7 +80,6 @@ class HumanTrackedEventWatcher(ALModule):
             print "start ASR"
 
     def stop_speech_reco(self):
-        print("停止录音")
         """ stop asr when someone's detected in event handler class """
         if self.is_speech_reco_started:
             self.speech_reco.unsubscribe("BasicAwareness_Test")
@@ -111,7 +87,6 @@ class HumanTrackedEventWatcher(ALModule):
             print "stop ASR"
 
     def get_people_perception_data(self, id_person_tracked):
-        print ("获取位置")
         memory = ALProxy("ALMemory", ip_robot, port_robot)
         memory_key = "PeoplePerception/Person/" + str(id_person_tracked) + \
                      "/PositionInWorldFrame"

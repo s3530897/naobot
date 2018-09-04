@@ -4,6 +4,7 @@ from naoqi import ALProxy
 
 ip_robot = "10.0.7.63"
 port_robot = 9559
+test="/home/nao/test.wav"
 
 #录音播放功能测试
 def sound_record():
@@ -20,10 +21,9 @@ def sound_record():
     aup.post.playFile("/home/nao/rectest.wav")
 
 
-def sound_test():
+def sound_test(path = ti):
     aup = ALProxy("ALAudioPlayer", ip_robot, port_robot)
     aup.post.playFile("/home/nao/test.wav")
-    time.sleep(10)
 
 if  __name__ == "__main__":
     sound_record()
