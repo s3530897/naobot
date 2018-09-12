@@ -52,7 +52,10 @@ def integration_to_nao():
     sftp.put(rec_path, rer_path)
     print ("test4")
     aup = ALProxy("ALAudioPlayer", ip_robot, port_robot)
-    aup.post.playFile(rer_path)
+    file_id=aup.loadFile(rer_path)
+    ti = aup.getFileLength(file_id)
+    aup.play(file_id)
+    time.sleep(ti)
 
 #发送指定语音文件至科大讯飞转译为文字返回字符串
 def sendfile_to_service(file_path = c_path):
@@ -108,12 +111,12 @@ def str_sclassification(strs):
             flag_lzz_vit is not None):
         strs = lzzr.connect_lzz_reference(strs)
         net_connect(strs)
-        return 160
+        return 1
     elif(
         flag_lzz is not None):
         strs = lzzf.connect_lzz_food_recognize(strs)
         net_connect(strs)
-        return 16
+        return 1
     elif(
             flag is not None
     ):
@@ -132,7 +135,7 @@ def str_sclassification(strs):
         strs = u"你好"+strs+u",我叫闹闹"
         net_connect(strs)
         print (strs)
-        return 5
+        return 1
     elif(
             flag2 is not None):
         weather_lo_flag=re.search(u'的天气',strs)
@@ -151,24 +154,23 @@ def str_sclassification(strs):
         else:
             strs = weather.connect_weather()
         net_connect(strs)
-        return 18
+        return 1
     elif((flag_takephoto1 is not None) or (flag_takephoto2 is not None)):
         strs = "好啊，给你拍个照，看着我正义的眼睛，3,2,1，咔嚓"
         net_connect(strs)
         print("拍照准备")
-        time.sleep(6)
-        print("拍照计时")
         tph.takephoto()
-        return 3
+        return 1
     else:
         strs = "我没有听见你在说什么，不想做个自我介绍么？"
         net_connect(strs)
-        return 5
+        return 1
     print ("test7")
-    return 5
+    return 1
 
 #连接科大讯飞接口索取语音合成并播放
 def net_connect(str):
+    print(str)
     flag = 0
     while (
             flag < 3):

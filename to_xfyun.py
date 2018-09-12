@@ -8,6 +8,7 @@ import base64
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
+#科大讯飞接口测试
 def sound_recognize():
     '''
     myaudio = AudioSegment.from_file("E:/work/CNLP/resource/test2.wav" , "wav")

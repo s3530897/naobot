@@ -3,6 +3,7 @@ import ro_to_xf_to_ro as ro
 import time
 
 #基于本机中枢传递的人机交互测试
+#循环触发
 def interact():
     while(True):
         print('开始')

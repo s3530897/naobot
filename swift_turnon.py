@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*
 import ro_to_xf_to_ro as ro
 import time
+
+#线程合作测试
 class turnsw():
     flag=False
     def turnon(self):

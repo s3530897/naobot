@@ -31,15 +31,15 @@ class HumanTrackedEventWatcher(ALModule):
                                 "humanEventWatcher",
                                 "onPeopleLeft")
         memory.subscribeToEvent("SpeechDetected",
-                                "true",
+                                "humanEventWatcher",
                                 "onSpeechDetected")
         memory.subscribeToEvent("ALSpeechRecognition / IsRunning",
-                                "True",
+                                "humanEventWatcher",
                                 "onALSpeechDetected")
         memory.subscribeToEvent("FrontTactilTouched",
-                                1.0,
+                                "humanEventWatcher",
                                 "onFrontTactilTouched")
-        memory.subscribeToEvent('WordRecognized', ip_robot, 'wordRecognized')
+        memory.subscribeToEvent('WordRecognized', "humanEventWatcher", 'wordRecognized')
         self.speech_reco = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
         self.text_to_speech=ALProxy("ALTextToSpeech", ip_robot, port_robot)
         self.is_speech_reco_started = False
@@ -56,15 +56,6 @@ class HumanTrackedEventWatcher(ALModule):
         print(eventName)
         print(value)
         print(subscriberIdentifier)
-
-    def onALSpeechDetected(self):
-        print("这是最后的波纹原版")
-
-    def onSpeechDetected(self):
-        print("这还是最后的波纹")
-
-    def onFrontTactilTouched(self):
-        print("咬你哦")
 
     def onHumanTracked(self, key, value, msg):
         """ callback for event HumanTracked """

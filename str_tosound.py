@@ -10,7 +10,7 @@ URL = "http://api.xfyun.cn/v1/service/v1/tts"
 AUE = "raw"
 APPID = "5b7fbe72"
 API_KEY = "44a73a6b6f487ce4905431ad24b32ec6"
-
+#语音合成
 #头文件标准
 def getHeader():
         curTime = str(int(time.time()))
@@ -47,7 +47,7 @@ def txt_to_sound(str):
     if contentType == "audio/mpeg":
         sid = r.headers['sid']
         if AUE == "raw":
-            writeFile("E:/work/CNLP/resource/what.wav", r.content)
+            writeFile("E:/work/CNLP/resource/intest.wav", r.content)
         else :
             writeFile("audio/"+sid+".mp3", r.content)
         print "success, sid = " + sid

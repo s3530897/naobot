@@ -3,6 +3,8 @@ import time
 from multiprocessing import Process
 from swift_turnon import turnsw
 import os
+
+#线程测试
 global t
 t=turnsw()
 def f(name):

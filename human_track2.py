@@ -7,7 +7,7 @@ ip_robot = "10.0.7.63"
 port_robot = 9559
 
 
-# Global variable to store the humanEventWatcher module instance
+# 人物跟踪+声音交互触发+循环触发
 humanEventWatcher = None
 memory = None
 
@@ -39,6 +39,8 @@ class HumanTrackedEventWatcher(ALModule):
                                 "onFrontTactilTouched")
         self.speech_reco = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
         self.is_speech_reco_started = False
+        #self.speech_reco.setVocabulary(["yes", "no","nao","now now","what are you talking"], False)
+        self.speech_reco.subscribe("Test_ASR")
 
     def onHumanTracked(self, key, value, msg):
         """ callback for event HumanTracked """
@@ -66,11 +68,10 @@ class HumanTrackedEventWatcher(ALModule):
         print(value)
         print(subscriberIdentifier)
 
-    def onSpeechDetected(self,eventName,value,subscriberIdentifier):
+    def onSpeechDetected(self,eventName,value):
         print("这还是最后的波纹")
         print(eventName)
         print(value)
-        print(subscriberIdentifier)
 
 
     def onFrontTactilTouched(self,eventName,value):
