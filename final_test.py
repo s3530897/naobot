@@ -1,6 +1,4 @@
 # -*- encoding: UTF-8 -*-
-""" Say `My {Body_part} is touched` when receiving a touch event
-"""
 
 import sys
 import time
@@ -13,7 +11,7 @@ import file_transport
 import ro_to_xf_to_ro as toxf
 
 
-# 中间测试
+#综合版测试
 ReactToTouch = None
 memory = None
 ip_robot = "10.0.7.63"
@@ -27,6 +25,7 @@ class ReactToTouch(ALModule):
     def __init__(self, name):
         ALModule.__init__(self, name)
         global memory
+        self.onplay_flag=False
         self.Flag = True
         memory = ALProxy("ALMemory")
         memory.subscribeToEvent("FrontTactilTouched",
@@ -38,6 +37,12 @@ class ReactToTouch(ALModule):
         memory.subscribeToEvent("ALAudioSourceLocalization/SoundLocated",
                                 "ReactToTouch",
                                 "onSoundLocated")
+        memory.subscribeToEvent('WordRecognized',
+                                "ReactToTouch",
+                                'onWordRecognized')
+        self.speech_reco = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
+        #self.speech_reco.setVocabulary(["yes", "no", "nao", "now now", "what are you talking"], False)
+        self.speech_reco.subscribe("Test_ASR")
 
     def onFrontTactilTouched(self, strVarName, value):
         # to avoid repetitions
@@ -45,29 +50,49 @@ class ReactToTouch(ALModule):
         print(value)
         if(value>0.5):
             if(self.Flag):
+                print("开始")
                 self.Flag=False
                 sound_record.sound_record_start()
             else:
                 self.Flag=True
+                print("结束")
                 sound_record.sound_record_stop()
                 file_transport.transit_to_c()
                 s = toxf.sendfile_to_service()
                 toxf.str_sclassification(s)
 
+        data = memory.getData("WordRecognized")
+        print("居然还检测到了数据data: %s" % data)
+        print(data)
         print(strVarName)
         print(self.Flag)
 
     def onSoundLocated(self, eventName, value, subscriberIdentifier):
-        print("检测不到也不能怪我啊")
+        print("已经检测到地理位置")
+        print(eventName)
+        print(value)
+        print(subscriberIdentifier)
+        if(self.onplay_flag):
+            return
+        else:
+            self.onplay_flag = True
+            sound_record.sound_record_stop()
+
+            result = toxf.integration_from_nao()
+            toxf.str_sclassification(result)
+
+            sound_record.sound_record_start()
+            self.onplay_flag = False
+
+    def onSoundDetected(self, eventName, value, subscriberIdentifier):
+        print("已经检测到声音来源")
         print(eventName)
         print(value)
         print(subscriberIdentifier)
 
-    def onSoundDetected(self, eventName, value, subscriberIdentifier):
-        print("这是最后的波纹")
-        print(eventName)
-        print(value)
-        print(subscriberIdentifier)
+        data = memory.getData("WordRecognized")
+        print("data: %s" % data)
+        print(data)
 
 def main(ip, port):
     myBroker = ALBroker("myBroker",
@@ -96,11 +121,4 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=9559,
                         help="Robot port number")
     args = parser.parse_args()
-    basic_awareness = ALProxy("ALBasicAwareness", ip_robot, port_robot)
-    motion = ALProxy("ALMotion", ip_robot, port_robot)
-
-    # start
-    motion.wakeUp()
-    basic_awareness.setEngagementMode("FullyEngaged")
-    basic_awareness.startAwareness()
     main(args.ip, args.port)

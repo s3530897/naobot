@@ -1,6 +1,4 @@
 # -*- encoding: UTF-8 -*-
-""" Say `My {Body_part} is touched` when receiving a touch event
-"""
 
 import sys
 import time
@@ -27,6 +25,7 @@ class ReactToTouch(ALModule):
     def __init__(self, name):
         ALModule.__init__(self, name)
         global memory
+        self.onplay_flag = False
         self.Flag = True
         memory = ALProxy("ALMemory")
         memory.subscribeToEvent("FrontTactilTouched",
@@ -51,10 +50,12 @@ class ReactToTouch(ALModule):
         print(value)
         if(value>0.5):
             if(self.Flag):
+                print("开始")
                 self.Flag=False
                 sound_record.sound_record_start()
             else:
                 self.Flag=True
+                print("结束")
                 sound_record.sound_record_stop()
                 file_transport.transit_to_c()
                 s = toxf.sendfile_to_service()
@@ -71,6 +72,7 @@ class ReactToTouch(ALModule):
         print(eventName)
         print(value)
         print(subscriberIdentifier)
+
 
     def onSoundDetected(self, eventName, value, subscriberIdentifier):
         print("这是最后的波纹")

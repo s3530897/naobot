@@ -10,7 +10,7 @@ class sound_recognize:
     def __init__(self):
         self.checkdata=0
 
-    #基于机器人本体的语音辨析测试
+    #基于机器人本体的语音辨析测试+声音甄别测试
     def sound_recognize(self,t=10):
         self.asr = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
         self.asr.pause(True)
@@ -22,7 +22,7 @@ class sound_recognize:
         self.am.subscribeToEvent('WordRecognized',ip_robot,'wordRecognized')
         self.am.subscribeToEvent("SoundDetected",ip_robot,"onSoundDetected")
         self.asr.pause(False)
-        time.sleep(t)
+        time.sleep(50)
         self.asr.unsubscribe(ip_robot)
         self.data=self.am.getData("WordRecognized")
         print("data: %s" % self.data)
@@ -40,7 +40,4 @@ class sound_recognize:
         print(subscriberIdentifier)
 
 if __name__=="__main__":
-    while(True):
-        print(99)
-        sound_recognize().sound_recognize(3)
-        print(88)
+    sound_recognize().sound_recognize()

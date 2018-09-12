@@ -105,6 +105,8 @@ def str_sclassification(strs):
     flag_takephoto2 = re.search(u'拍个照', strs)
     flag_lzz = re.search(u'记录',strs)
     flag_lzz_vit = re.search(u'营养',strs)
+    flag_sayhi=re.search(u'你好',strs)
+    flag_bye=re.search(u'再见',strs)
     print(flag)
     print ("test5")
     if(
@@ -161,10 +163,16 @@ def str_sclassification(strs):
         print("拍照准备")
         tph.takephoto()
         return 1
-    else:
-        strs = "我没有听见你在说什么，不想做个自我介绍么？"
+    elif(flag_sayhi is not None):
+        strs="你也好呀，有什么事情想问我的嘛？"
         net_connect(strs)
         return 1
+    elif(flag_bye is not None):
+        strs = "再见，不要太想我哦。"
+        net_connect(strs)
+        return 1
+    else:
+        return 0
     print ("test7")
     return 1
 
