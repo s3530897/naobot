@@ -13,9 +13,10 @@ from naoqi import ALProxy
 import takephoto as tph
 import lzz_recognize_food as lzzf
 import lzz_reference as lzzr
+import ex_api.health_qa as health_qa
 
 port_trans = 22
-ip_robot = "10.0.7.63"
+ip_robot = "10.46.105.41"
 port_robot = 9559
 c_path = "E:/work/CNLP/resource/test.wav"
 r_path = "/home/nao/test.wav"
@@ -28,7 +29,7 @@ def integration_from_nao():
     channal_list = [0, 0, 1, 0]
     aur.startMicrophonesRecording("/home/nao/test.wav", "wav", 16000, channal_list)
     print("开始")
-    time.sleep(10)
+    time.sleep(5)
     aur.stopMicrophonesRecording()
     print("完成")
     transport = paramiko.Transport((ip_robot, port_trans))
@@ -54,6 +55,7 @@ def integration_to_nao():
     aup = ALProxy("ALAudioPlayer", ip_robot, port_robot)
     file_id=aup.loadFile(rer_path)
     ti = aup.getFileLength(file_id)
+    print("时间：",ti)
     aup.play(file_id)
     time.sleep(ti)
 
@@ -102,11 +104,12 @@ def str_sclassification(strs):
     flag = re.search(u'我叫', strs)
     flag2 = re.search(u'天气', strs)
     flag_takephoto1 = re.search(u'拍照', strs)
-    flag_takephoto2 = re.search(u'拍个照', strs)
+    flag_takephoto2 = re.search(u'拍张照', strs)
     flag_lzz = re.search(u'记录',strs)
     flag_lzz_vit = re.search(u'营养',strs)
     flag_sayhi=re.search(u'你好',strs)
     flag_bye=re.search(u'再见',strs)
+    flag_healthqa,health_str= health_qa.healthqa(strs)
     print(flag)
     print ("test5")
     if(
@@ -134,7 +137,7 @@ def str_sclassification(strs):
             strs = ''
             pass
         print(strs)
-        strs = u"你好"+strs+u",我叫闹闹"
+        strs = u"你好"+strs+u",我叫闹闹,很高兴认识你"
         net_connect(strs)
         print (strs)
         return 1
@@ -158,7 +161,7 @@ def str_sclassification(strs):
         net_connect(strs)
         return 1
     elif((flag_takephoto1 is not None) or (flag_takephoto2 is not None)):
-        strs = "好啊，给你拍个照，看着我正义的眼睛，3,2,1，咔嚓"
+        strs = "可以啊，给你拍个照，看着我正义的眼睛，3,2,1，咔嚓"
         net_connect(strs)
         print("拍照准备")
         tph.takephoto()
@@ -170,6 +173,9 @@ def str_sclassification(strs):
     elif(flag_bye is not None):
         strs = "再见，不要太想我哦。"
         net_connect(strs)
+        return 1
+    elif(flag_healthqa):
+        net_connect(health_str)
         return 1
     else:
         return 0

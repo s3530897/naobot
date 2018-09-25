@@ -31,15 +31,9 @@ class ReactToTouch(ALModule):
         memory.subscribeToEvent("FrontTactilTouched",
                                 "ReactToTouch",
                                 "onFrontTactilTouched")
-        memory.subscribeToEvent("SoundDetected",
-                                "ReactToTouch",
-                                "onSoundDetected")
         memory.subscribeToEvent("ALAudioSourceLocalization/SoundLocated",
                                 "ReactToTouch",
                                 "onSoundLocated")
-        memory.subscribeToEvent('WordRecognized',
-                                "ReactToTouch",
-                                'onWordRecognized')
         self.speech_reco = ALProxy("ALSpeechRecognition", ip_robot, port_robot)
         #self.speech_reco.setVocabulary(["yes", "no", "nao", "now now", "what are you talking"], False)
         self.speech_reco.subscribe("Test_ASR")
@@ -52,11 +46,11 @@ class ReactToTouch(ALModule):
             if(self.Flag):
                 print("开始")
                 self.Flag=False
-                sound_record.sound_record_start()
+                self.sound_record.sound_record_start()
             else:
                 self.Flag=True
                 print("结束")
-                sound_record.sound_record_stop()
+                self.sound_record.sound_record_stop()
                 file_transport.transit_to_c()
                 s = toxf.sendfile_to_service()
                 toxf.str_sclassification(s)
@@ -76,23 +70,13 @@ class ReactToTouch(ALModule):
             return
         else:
             self.onplay_flag = True
-            sound_record.sound_record_stop()
+            self.sound_record.sound_record_stop()
 
             result = toxf.integration_from_nao()
             toxf.str_sclassification(result)
 
-            sound_record.sound_record_start()
+            self.sound_record.sound_record_start()
             self.onplay_flag = False
-
-    def onSoundDetected(self, eventName, value, subscriberIdentifier):
-        print("已经检测到声音来源")
-        print(eventName)
-        print(value)
-        print(subscriberIdentifier)
-
-        data = memory.getData("WordRecognized")
-        print("data: %s" % data)
-        print(data)
 
 def main(ip, port):
     myBroker = ALBroker("myBroker",
